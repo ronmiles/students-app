@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StudentDetailsActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:title="‹ Student Details"
+        app:titleTextColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="428dp"
+        android:layout_height="278dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:contentDescription="Profile Image"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topAppBar"
+        app:srcCompat="@drawable/student" />
+
+    <TextView
+        android:id="@+id/student_details_activity_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="4dp"
+        android:text="Name:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/student_details_activity_name_edit_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <EditText
+        android:id="@+id/student_details_activity_name_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:backgroundTint="@color/black"
+        android:hint="Enter Name"
+        app:layout_constraintBaseline_toBaselineOf="@+id/student_details_activity_name_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/student_details_activity_name_text_view" />
+
+    <TextView
+        android:id="@+id/student_details_activity_id_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="ID:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/student_details_activity_name_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/student_details_activity_name_text_view" />
+
+    <EditText
+        android:id="@+id/student_details_activity_id_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:padding="8dp"
+        android:backgroundTint="@color/black"
+        android:hint="Enter ID"
+        app:layout_constraintBaseline_toBaselineOf="@+id/student_details_activity_id_text_view"
+        app:layout_constraintEnd_toEndOf="@+id/student_details_activity_name_edit_text"
+        app:layout_constraintStart_toEndOf="@+id/student_details_activity_id_text_view" />
+
+    <TextView
+        android:id="@+id/student_details_activity_phone_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Phone:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/student_details_activity_id_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/student_details_activity_id_text_view" />
+
+    <EditText
+        android:id="@+id/student_details_activity_phone_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:padding="8dp"
+        android:backgroundTint="@color/black"
+        android:hint="Enter Phone"
+        app:layout_constraintBaseline_toBaselineOf="@+id/student_details_activity_phone_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/student_details_activity_phone_text_view" />
+
+    <TextView
+        android:id="@+id/student_details_activity_address_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Address:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/student_details_activity_address_edit_text"
+        app:layout_constraintStart_toStartOf="@+id/student_details_activity_phone_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/student_details_activity_phone_text_view" />
+
+    <EditText
+        android:id="@+id/student_details_activity_address_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:padding="8dp"
+        android:backgroundTint="@color/black"
+        android:hint="Enter Address"
+        app:layout_constraintBaseline_toBaselineOf="@+id/student_details_activity_address_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/student_details_activity_address_text_view" />
+
+    <CheckBox
+        android:id="@+id/student_details_activity_checked_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Checked"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/student_details_activity_address_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/student_details_activity_address_text_view" />
+
+    <TextView
+        android:id="@+id/student_details_activity_edit_message_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="Please verify the details before editing."
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/student_details_activity_edit_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/student_details_activity_edit_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/black"
+        android:elevation="4dp"
+        android:text="Edit"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
