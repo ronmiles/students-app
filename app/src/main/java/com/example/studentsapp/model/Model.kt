@@ -13,7 +13,7 @@ class Model private constructor() {
     }
 
     private fun initData() {
-        repeat(20) { index ->
+        repeat(4) { index ->
             addStudent(
                 Student(
                     name = "Student ${index + 1}",

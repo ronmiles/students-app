@@ -38,6 +38,14 @@ class StudentDetailsActivity : AppCompatActivity() {
         
         loadStudentData()
 
+        checkboxStatus.setOnClickListener {
+            val student = Model.instance.getStudentById(studentId)
+            student?.let {
+                val updatedStudent = it.copy(isChecked = checkboxStatus.isChecked)
+                Model.instance.updateStudentById(updatedStudent)
+            }
+        }
+
         buttonEdit.setOnClickListener {
             val student = Model.instance.getStudentById(studentId)
             val intent = Intent(this, EditStudentActivity::class.java).apply {

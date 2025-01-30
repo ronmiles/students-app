@@ -1,6 +1,9 @@
 package com.example.studentsapp
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -9,6 +12,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.studentsapp.model.Model
+import com.example.studentsapp.model.Student
 
 class AddStudentActivity : AppCompatActivity() {
 
@@ -16,9 +21,9 @@ class AddStudentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_add_student)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
@@ -32,19 +37,28 @@ class AddStudentActivity : AppCompatActivity() {
         val addressEditText: EditText = findViewById(R.id.add_student_activity_address_edit_text)
         val saveMessageTextView: TextView = findViewById(R.id.add_student_activity_save_message_text_view)
 
-
-        cancelButton.setOnClickListener{
-            finish()
+        saveButton.setOnClickListener {
+            val newStudent = Student(
+                name = nameEditText.text.toString(),
+                id = idEditText.text.toString(),
+                phone = phoneEditText.text.toString(),
+                address = addressEditText.text.toString(),
+                isChecked = checkedButton.isChecked
+            )
+            
+            Model.instance.addStudent(newStudent)
+            saveMessageTextView.text = "Student added successfully"
+            
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(this, StudentsRecyclerViewActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
+            }, 1000)
         }
 
-        saveButton.setOnClickListener {
-            val name = nameEditText.text.toString()
-            val id = idEditText.text.toString()
-            val phone = phoneEditText.text.toString()
-            val address = addressEditText.text.toString()
-            val isChecked = if (checkedButton.isChecked) "Checked" else "Unchecked"
-
-            saveMessageTextView.text = "Changes saved successfully"
+        cancelButton.setOnClickListener {
+            finish()
         }
     }
 }
