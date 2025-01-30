@@ -42,7 +42,7 @@ class StudentDetailsActivity : AppCompatActivity() {
             val student = Model.instance.getStudentById(studentId)
             student?.let {
                 val updatedStudent = it.copy(isChecked = checkboxStatus.isChecked)
-                Model.instance.updateStudentById(updatedStudent)
+                Model.instance.updateStudentById(studentId, updatedStudent)
             }
         }
 

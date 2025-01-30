@@ -16,7 +16,7 @@ import com.example.studentsapp.model.Model
 import com.example.studentsapp.model.Student
 
 class EditStudentActivity : AppCompatActivity() {
-    private var studentId: String = ""
+    private var originalStudentId: String = ""  // Keep track of the original ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,14 +38,14 @@ class EditStudentActivity : AppCompatActivity() {
         val editTextAddress: EditText = findViewById(R.id.edit_student_activity_address_edit_text)
         val textViewSaveMessage: TextView = findViewById(R.id.edit_student_activity_save_message_text_view)
 
-        studentId = intent.getStringExtra("studentId") ?: ""
+        originalStudentId = intent.getStringExtra("studentId") ?: ""
         val studentName = intent.getStringExtra("studentName")
         val studentPhone = intent.getStringExtra("studentPhone")
         val studentAddress = intent.getStringExtra("studentAddress")
         val studentChecked = intent.getBooleanExtra("isChecked", false)
 
         studentName?.let { editTextName.setText(it) }
-        studentId?.let { editTextId.setText(it) }
+        editTextId.setText(originalStudentId)
         studentPhone?.let { editTextPhone.setText(it) }
         studentAddress?.let { editTextAddress.setText(it) }
         checkboxStatus.isChecked = studentChecked
@@ -55,7 +55,7 @@ class EditStudentActivity : AppCompatActivity() {
         }
 
         buttonSave.setOnClickListener {
-            if (studentId.isNotEmpty()) {
+            if (originalStudentId.isNotEmpty()) {
                 val updatedStudent = Student(
                     name = editTextName.text.toString(),
                     id = editTextId.text.toString(),
@@ -64,18 +64,21 @@ class EditStudentActivity : AppCompatActivity() {
                     isChecked = checkboxStatus.isChecked
                 )
                 
-                Model.instance.updateStudentById(updatedStudent)
+                Model.instance.updateStudentById(originalStudentId, updatedStudent)
                 textViewSaveMessage.text = "Changes saved successfully"
                 
                 Handler(Looper.getMainLooper()).postDelayed({
+                    val intent = Intent(this, StudentsRecyclerViewActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
                     finish()
                 }, 1000)
             }
         }
 
         buttonDelete.setOnClickListener {
-            if (studentId.isNotEmpty()) {
-                Model.instance.deleteStudentById(studentId)
+            if (originalStudentId.isNotEmpty()) {
+                Model.instance.deleteStudentById(originalStudentId)
                 textViewSaveMessage.text = "Student deleted successfully"
                 
                 Handler(Looper.getMainLooper()).postDelayed({
