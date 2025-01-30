@@ -2,6 +2,8 @@ package com.example.studentsapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -10,8 +12,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.studentsapp.model.Model
+import com.example.studentsapp.model.Student
 
 class EditStudentActivity : AppCompatActivity() {
+    private var studentId: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -32,8 +38,8 @@ class EditStudentActivity : AppCompatActivity() {
         val editTextAddress: EditText = findViewById(R.id.edit_student_activity_address_edit_text)
         val textViewSaveMessage: TextView = findViewById(R.id.edit_student_activity_save_message_text_view)
 
+        studentId = intent.getStringExtra("studentId") ?: ""
         val studentName = intent.getStringExtra("studentName")
-        val studentId = intent.getStringExtra("studentId")
         val studentPhone = intent.getStringExtra("studentPhone")
         val studentAddress = intent.getStringExtra("studentAddress")
         val studentChecked = intent.getBooleanExtra("isChecked", false)
@@ -49,23 +55,36 @@ class EditStudentActivity : AppCompatActivity() {
         }
 
         buttonSave.setOnClickListener {
-            val name = editTextName.text.toString()
-            val id = editTextId.text.toString()
-            val phone = editTextPhone.text.toString()
-            val address = editTextAddress.text.toString()
-            val status = if (checkboxStatus.isChecked) "Checked" else "Unchecked"
-
-            textViewSaveMessage.text = "Changes saved succesfully"
+            if (studentId.isNotEmpty()) {
+                val updatedStudent = Student(
+                    name = editTextName.text.toString(),
+                    id = editTextId.text.toString(),
+                    phone = editTextPhone.text.toString(),
+                    address = editTextAddress.text.toString(),
+                    isChecked = checkboxStatus.isChecked
+                )
+                
+                Model.instance.updateStudentById(updatedStudent)
+                textViewSaveMessage.text = "Changes saved successfully"
+                
+                Handler(Looper.getMainLooper()).postDelayed({
+                    finish()
+                }, 1000)
+            }
         }
 
         buttonDelete.setOnClickListener {
-            val name = null
-            val id = null
-            val phone = null
-            val address = null
-            val status = "Unchecked"
-
-            textViewSaveMessage.text = "Deleted succesfully"
+            if (studentId.isNotEmpty()) {
+                Model.instance.deleteStudentById(studentId)
+                textViewSaveMessage.text = "Student deleted successfully"
+                
+                Handler(Looper.getMainLooper()).postDelayed({
+                    val intent = Intent(this, StudentsRecyclerViewActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    finish()
+                }, 1000)
+            }
         }
     }
 }

@@ -6,47 +6,65 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.studentsapp.model.Model
 import com.google.android.material.appbar.MaterialToolbar
 
 class StudentDetailsActivity : AppCompatActivity() {
+    private var studentId: String = ""
+    private lateinit var textViewName: TextView
+    private lateinit var textViewId: TextView
+    private lateinit var textViewPhone: TextView
+    private lateinit var textViewAddress: TextView
+    private lateinit var checkboxStatus: CheckBox
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
         setupToolbar()
 
-        val checkboxStatus: CheckBox = findViewById(R.id.student_details_activity_checked_button)
-        val editTextName: EditText = findViewById(R.id.student_details_activity_name_edit_text)
-        val editTextId: EditText = findViewById(R.id.student_details_activity_id_edit_text)
-        val editTextPhone: EditText = findViewById(R.id.student_details_activity_phone_edit_text)
-        val editTextAddress: EditText = findViewById(R.id.student_details_activity_address_edit_text)
+        checkboxStatus = findViewById(R.id.student_details_activity_checked_button)
+        textViewName = findViewById(R.id.student_details_activity_name_text)
+        textViewId = findViewById(R.id.student_details_activity_id_text)
+        textViewPhone = findViewById(R.id.student_details_activity_phone_text)
+        textViewAddress = findViewById(R.id.student_details_activity_address_text)
         val buttonEdit: Button = findViewById(R.id.student_details_activity_edit_button)
 
-        val studentName = intent.getStringExtra("studentName")
-        val studentId = intent.getStringExtra("studentId")
-        val studentPhone = intent.getStringExtra("studentPhone")
-        val studentAddress = intent.getStringExtra("studentAddress")
-        val studentChecked = intent.getBooleanExtra("isChecked", false)
-
-        studentName?.let { editTextName.setText(it) }
-        studentId?.let { editTextId.setText(it) }
-        studentPhone?.let { editTextPhone.setText(it) }
-        studentAddress?.let { editTextAddress.setText(it) }
-        checkboxStatus.isChecked = studentChecked
+        studentId = intent.getStringExtra("studentId") ?: ""
+        
+        loadStudentData()
 
         buttonEdit.setOnClickListener {
+            val student = Model.instance.getStudentById(studentId)
             val intent = Intent(this, EditStudentActivity::class.java).apply {
-                putExtra("studentName", studentName)
                 putExtra("studentId", studentId)
-                putExtra("studentPhone", studentPhone)
-                putExtra("studentAddress", studentAddress)
-                putExtra("isChecked", studentChecked)
+                putExtra("studentName", student?.name)
+                putExtra("studentPhone", student?.phone)
+                putExtra("studentAddress", student?.address)
+                putExtra("isChecked", student?.isChecked)
             }
             startActivity(intent)
         }
+    }
+
+    private fun loadStudentData() {
+        val student = Model.instance.getStudentById(studentId)
+        student?.let {
+            textViewName.text = it.name
+            textViewId.text = it.id
+            textViewPhone.text = it.phone
+            textViewAddress.text = it.address
+            checkboxStatus.isChecked = it.isChecked
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadStudentData() // Refresh the data when returning to this screen
     }
 
     private fun setupUI() {

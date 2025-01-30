@@ -31,11 +31,21 @@ class Model private constructor() {
         _students.add(student)
     }
 
-    fun updateStudent(student: Student, position: Int) {
-        _students[position] = student
+    fun getStudentById(id: String): Student? {
+        return _students.find { it.id == id }
     }
 
-    fun deleteStudent(position: Int) {
-        _students.removeAt(position)
+    fun updateStudentById(updatedStudent: Student) {
+        val index = _students.indexOfFirst { it.id == updatedStudent.id }
+        if (index != -1) {
+            _students[index] = updatedStudent
+        }
+    }
+
+    fun deleteStudentById(id: String) {
+        val index = _students.indexOfFirst { it.id == id }
+        if (index != -1) {
+            _students.removeAt(index)
+        }
     }
 }

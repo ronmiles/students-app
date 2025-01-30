@@ -23,7 +23,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class StudentsRecyclerViewActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: StudentsRecyclerAdapter
-    private val students: List<Student> = Model.instance.students
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +50,7 @@ class StudentsRecyclerViewActivity : AppCompatActivity() {
         recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(this@StudentsRecyclerViewActivity)
-            adapter = StudentsRecyclerAdapter(students).also { 
+            adapter = StudentsRecyclerAdapter(Model.instance.students).also { 
                 this@StudentsRecyclerViewActivity.adapter = it 
             }
         }
@@ -68,6 +67,12 @@ class StudentsRecyclerViewActivity : AppCompatActivity() {
         startActivity(Intent(this, AddStudentActivity::class.java))
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Refresh the list when returning to this screen
+        adapter.updateStudents(Model.instance.students)
+    }
+
     class StudentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var nameTextView: TextView? = itemView.findViewById(R.id.student_row_name_text_view)
         private var idTextView: TextView? = itemView.findViewById(R.id.student_row_id_text_view)
@@ -79,18 +84,13 @@ class StudentsRecyclerViewActivity : AppCompatActivity() {
                 try {
                     if (student != null) {
                         val intent = Intent(itemView.context, StudentDetailsActivity::class.java)
-                        // Log the data being passed
-                        Log.d("StudentApp", "Passing student data: ${student?.name}, ${student?.id}")
-
-                        // Add extras safely
-                        student?.let { currentStudent ->
-                            intent.putExtra("studentId", currentStudent.id ?: "")
-                            intent.putExtra("studentName", currentStudent.name ?: "")
-                            intent.putExtra("studentPhone", currentStudent.phone ?: "")
-                            intent.putExtra("studentAddress", currentStudent.address ?: "")
-                            intent.putExtra("isChecked", currentStudent.isChecked)
-                        }
-
+                        // Only pass the ID and other necessary data
+                        intent.putExtra("studentId", student?.id)
+                        intent.putExtra("studentName", student?.name)
+                        intent.putExtra("studentPhone", student?.phone)
+                        intent.putExtra("studentAddress", student?.address)
+                        intent.putExtra("isChecked", student?.isChecked)
+                        
                         itemView.context.startActivity(intent)
                     } else {
                         Toast.makeText(itemView.context, "Error: Student data not available", Toast.LENGTH_SHORT).show()
@@ -123,8 +123,14 @@ class StudentsRecyclerViewActivity : AppCompatActivity() {
         }
     }
 
-    class StudentsRecyclerAdapter(private val students: List<Student>?) :
+    class StudentsRecyclerAdapter(private var students: List<Student>?) :
         RecyclerView.Adapter<StudentViewHolder>() {
+        
+        fun updateStudents(newStudents: List<Student>) {
+            students = newStudents
+            notifyDataSetChanged()
+        }
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val view = inflater.inflate(R.layout.student_list_row, parent, false)
